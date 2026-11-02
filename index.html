@@ -83,7 +83,7 @@ $('#view').innerHTML=h;document.querySelectorAll('[data-s]').forEach(b=>b.onclic
 function show(d){D=d;$('#gate').hidden=true;document.body.className='in';$('#app').hidden=false;
 $('#asof').textContent='Data as of '+new Date(d.generated).toLocaleString('en-US',{timeZone:'America/Chicago',dateStyle:'medium',timeStyle:'short'})+' (Chicago time)';render();}
 document.querySelectorAll('nav button').forEach(b=>b.onclick=()=>{V=b.dataset.v;render()});
-const ENDPOINT='';
+const ENDPOINT='https://script.google.com/macros/s/AKfycbxF1rbtnLmZ1yiViyYeAzUDJWKpsdc9hLIfGsy3J4N2a8Lddo6tr1HsSgkA3H6nyUPOQA/exec';
 const msg=t=>{$('#msg').textContent=t};
 $('#f').onsubmit=async e=>{e.preventDefault();msg('');const v=$('#em').value.trim();if(!v){msg('Please enter a valid email address.');return}
 try{const d=await dec(v);sessionStorage.setItem('d',JSON.stringify(d));show(d);return}catch(x){}
