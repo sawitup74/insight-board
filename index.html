@@ -60,7 +60,7 @@ async function dec(pw){const e=await (await fetch('data.enc.json',{cache:'no-sto
 const k=await crypto.subtle.importKey('raw',new TextEncoder().encode(pw),'PBKDF2',false,['deriveKey']);
 const key=await crypto.subtle.deriveKey({name:'PBKDF2',salt:b64(e.salt),iterations:e.iter,hash:'SHA-256'},k,{name:'AES-GCM',length:256},false,['decrypt']);
 return JSON.parse(new TextDecoder().decode(await crypto.subtle.decrypt({name:'AES-GCM',iv:b64(e.iv)},key,b64(e.ct))));}
-let D,V='ov',S='Site 1';
+let D,V='ov',S='';
 function bars(vals,labels){const m=Math.max(1,...vals),w=600,h=160,bw=w/vals.length;
 return '<svg viewBox="0 0 '+w+' '+(h+20)+'">'+vals.map((v,i)=>{const bh=v/m*h;return '<rect x="'+(i*bw+1)+'" y="'+(h-bh)+'" width="'+(bw-2)+'" height="'+bh+'" fill="#4a78b5"><title>'+esc(labels[i])+': '+v+'</title></rect>'}).join('')+
 '<text x="0" y="'+(h+15)+'" font-size="11">'+esc(labels[0])+'</text><text x="'+w+'" y="'+(h+15)+'" font-size="11" text-anchor="end">'+esc(labels[labels.length-1])+'</text><text x="0" y="12" font-size="11">max '+m+'</text></svg>';}
@@ -80,7 +80,7 @@ if(V=='rf'){const L=Object.keys(D.sites);h=card('Referring sites (all sites)',tb
 card('Visits by hour, all sites (Chicago time)',bars(D.global.hourly,D.global.hourly.map((_,i)=>i+':00')));}
 if(V=='tr')h=card('Trends','<ul>'+D.trends.map(t=>'<li>'+esc(t)+'</li>').join('')+'</ul>');
 $('#view').innerHTML=h;document.querySelectorAll('[data-s]').forEach(b=>b.onclick=()=>{S=b.dataset.s;render()});}
-function show(d){D=d;$('#gate').hidden=true;document.body.className='in';$('#app').hidden=false;
+function show(d){D=d;S=Object.keys(d.sites)[0];$('#gate').hidden=true;document.body.className='in';$('#app').hidden=false;
 $('#asof').textContent='Data as of '+new Date(d.generated).toLocaleString('en-US',{timeZone:'America/Chicago',dateStyle:'medium',timeStyle:'short'})+' (Chicago time)';render();}
 document.querySelectorAll('nav button').forEach(b=>b.onclick=()=>{V=b.dataset.v;render()});
 const ENDPOINT='https://script.google.com/macros/s/AKfycbxF1rbtnLmZ1yiViyYeAzUDJWKpsdc9hLIfGsy3J4N2a8Lddo6tr1HsSgkA3H6nyUPOQA/exec';
