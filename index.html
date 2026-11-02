@@ -70,7 +70,7 @@ const card=(t,b)=>'<div class="card"><h3>'+t+'</h3>'+b+'</div>';
 const st=r=>r.status=='ok'?r.visits:'no data yet';
 function render(){let h='';document.querySelectorAll('nav button').forEach(b=>b.classList.toggle('on',b.dataset.v==V));
 if(V=='ov'){const g=D.global;h=card('Guide sites total',''+D.guide_total)+card('Ranking (Sites 1-6)',tbl(D.ranking,[['Site','site'],['Visits',st,1]]))+
-card('Separate',tbl([D.separate],[['Site','site'],['Visits',st,1]]))+card('Visits by day (all sites, 30 days)',bars(g.daily.map(d=>d.visits),g.daily.map(d=>d.day)));}
+card('Separate',tbl([].concat(D.separate),[['Site','site'],['Visits',st,1]]))+card('Visits by day (all sites, 30 days)',bars(g.daily.map(d=>d.visits),g.daily.map(d=>d.day)));}
 if(V=='ps'){const s=D.sites[S];h='<div class="tabs">'+Object.keys(D.sites).map(k=>'<button class="'+(k==S?'on':'')+'" data-s="'+k+'">'+k+'</button>').join('')+'</div>';
 if(s.status!='ok')h+=card(S,'<p class="muted">'+esc(s.status)+'</p>');else{const c=[['Name','name'],['Visits','count',1]];
 h+=card(S+' total',''+s.total)+card('Visits by day',bars(s.daily.map(d=>d.visits),s.daily.map(d=>d.day)))+card('Visits by hour (Chicago time)',bars(s.hourly,s.hourly.map((_,i)=>i+':00')))+
