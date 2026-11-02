@@ -2,23 +2,58 @@
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <meta name="robots" content="noindex,nofollow,noarchive">
 <meta name="referrer" content="no-referrer">
-<title>Insights</title>
+<title>Notch Grill</title>
 <style>
-body{font-family:system-ui,sans-serif;margin:0;background:#f6f7f9;color:#222}
+*{box-sizing:border-box}
+body{font-family:system-ui,-apple-system,"Segoe UI",sans-serif;margin:0;background:radial-gradient(ellipse at 50% 30%,#2a2a2d 0%,#161618 60%,#0e0e10 100%);color:#eee;min-height:100vh}
+#gate{min-height:100vh;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:24px;text-align:center}
+#gate svg{width:min(260px,62vw);height:auto;margin-bottom:18px}
+.ember{animation:glow 2.8s ease-in-out infinite}
+@keyframes glow{0%,100%{opacity:.75}50%{opacity:1}}
+h1{font-size:clamp(2.2rem,8vw,3.6rem);letter-spacing:.06em;margin:0;font-weight:800}
+h1 span{color:#ff7a2f}
+.soon{font-size:1.25rem;color:#ffb27a;margin:10px 0 4px;letter-spacing:.12em;text-transform:uppercase}
+.sub{max-width:440px;color:#aaa;line-height:1.5;margin:10px 0 22px}
+#f{display:flex;width:100%;max-width:420px;gap:8px;flex-wrap:wrap}
+#em{flex:1 1 220px;padding:13px 14px;border-radius:10px;border:1px solid #3a3a3e;background:#1d1d20;color:#eee;font-size:16px;outline:none}
+#em:focus{border-color:#ff7a2f;box-shadow:0 0 0 3px rgba(255,122,47,.2)}
+#f button{flex:0 0 auto;padding:13px 20px;border:0;border-radius:10px;background:linear-gradient(135deg,#ff8a3d,#e8530f);color:#fff;font-weight:700;font-size:16px;cursor:pointer}
+#f button:hover{filter:brightness(1.08)}
+#msg{min-height:1.4em;margin-top:14px;color:#ffb27a;font-size:.95rem}
+footer{position:fixed;bottom:12px;width:100%;text-align:center;color:#555;font-size:12px}
+body.in{background:#f6f7f9;color:#222}body.in footer{display:none}
 main{max-width:960px;margin:auto;padding:16px}
 .card{background:#fff;border:1px solid #ddd;border-radius:8px;padding:14px;margin:12px 0}
 table{border-collapse:collapse;width:100%;font-size:14px}td,th{padding:4px 6px;border-bottom:1px solid #eee;text-align:left}td.n,th.n{text-align:right}
 nav button,.tabs button{margin:2px;padding:6px 10px;border:1px solid #bbb;background:#fff;border-radius:6px;cursor:pointer}
 nav button.on,.tabs button.on{background:#333;color:#fff}
-#lock{max-width:320px;margin:80px auto;text-align:center}#lock input{padding:8px;width:70%}#lock button{padding:8px 14px}
-#err{color:#b00;min-height:1.2em}.muted{color:#888}.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:12px}
-svg{width:100%;height:auto}
-</style></head><body><main>
-<div id="lock"><h2>Insights</h2><form id="f"><input id="pw" type="password" autocomplete="current-password" autofocus> <button>Unlock</button></form><p id="err"></p></div>
-<div id="app" hidden><p id="asof" class="muted"></p>
+.muted{color:#888}.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:12px}
+#app svg{width:100%;height:auto}
+</style></head><body>
+<div id="gate">
+<svg viewBox="0 0 200 150" aria-hidden="true">
+<defs><radialGradient id="g" cx="50%" cy="50%" r="50%"><stop offset="0" stop-color="#ffd27a"/><stop offset=".45" stop-color="#ff7a2f"/><stop offset="1" stop-color="#ff7a2f" stop-opacity="0"/></radialGradient>
+<linearGradient id="fl" x1="0" y1="1" x2="0" y2="0"><stop offset="0" stop-color="#e8530f"/><stop offset="1" stop-color="#ffc46b"/></linearGradient></defs>
+<circle class="ember" cx="100" cy="88" r="46" fill="url(#g)" opacity=".85"/>
+<path class="ember" d="M100 40c10 14 22 22 18 40-2 10-10 16-18 16s-16-6-18-16c-2-9 3-15 8-21 1 7 4 10 8 11-3-10-2-20 2-30z" fill="url(#fl)"/>
+<g stroke="#8a8a90" stroke-width="5" stroke-linecap="round" fill="none">
+<ellipse cx="100" cy="108" rx="80" ry="22" stroke="#6a6a70"/>
+<line x1="40" y1="100" x2="78" y2="100"/><line x1="122" y1="100" x2="160" y2="100"/>
+<line x1="28" y1="110" x2="80" y2="110"/><line x1="120" y1="110" x2="172" y2="110"/>
+<line x1="40" y1="120" x2="160" y2="120"/></g>
+<path d="M84 104 l16 -10 l16 10" stroke="#ff7a2f" stroke-width="5" fill="none" stroke-linecap="round" stroke-linejoin="round" class="ember"/>
+</svg>
+<h1>NOTCH <span>GRILL</span></h1>
+<p class="soon">Coming soon.</p>
+<p class="sub">Please enter your email address to subscribe to our newsletter and be notified of site updates.</p>
+<form id="f" novalidate><input id="em" type="text" placeholder="Email address" autocomplete="off" autocapitalize="off" spellcheck="false" inputmode="email"><button>Notify me</button></form>
+<p id="msg" aria-live="polite"></p>
+<footer>&copy; 2026 Notch Grill</footer>
+</div>
+<main><div id="app" hidden><p id="asof" class="muted"></p>
 <nav><button data-v="ov" class="on">Overview</button><button data-v="ps">Per site</button><button data-v="rf">Referring sites</button><button data-v="tr">Trends</button></nav>
-<div id="view"></div></div>
-</main><script>
+<div id="view"></div></div></main>
+<script>
 const $=s=>document.querySelector(s),esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
 const b64=s=>Uint8Array.from(atob(s),c=>c.charCodeAt(0));
 async function dec(pw){const e=await (await fetch('data.enc.json',{cache:'no-store'})).json();
@@ -45,9 +80,14 @@ if(V=='rf'){const L=Object.keys(D.sites);h=card('Referring sites (all sites)',tb
 card('Visits by hour, all sites (Chicago time)',bars(D.global.hourly,D.global.hourly.map((_,i)=>i+':00')));}
 if(V=='tr')h=card('Trends','<ul>'+D.trends.map(t=>'<li>'+esc(t)+'</li>').join('')+'</ul>');
 $('#view').innerHTML=h;document.querySelectorAll('[data-s]').forEach(b=>b.onclick=()=>{S=b.dataset.s;render()});}
-function show(d){D=d;$('#lock').hidden=true;$('#app').hidden=false;
+function show(d){D=d;$('#gate').hidden=true;document.body.className='in';$('#app').hidden=false;
 $('#asof').textContent='Data as of '+new Date(d.generated).toLocaleString('en-US',{timeZone:'America/Chicago',dateStyle:'medium',timeStyle:'short'})+' (Chicago time)';render();}
 document.querySelectorAll('nav button').forEach(b=>b.onclick=()=>{V=b.dataset.v;render()});
-$('#f').onsubmit=async e=>{e.preventDefault();$('#err').textContent='';try{const d=await dec($('#pw').value);sessionStorage.setItem('d',JSON.stringify(d));show(d)}catch(x){$('#err').textContent='Wrong password'}};
+const ENDPOINT='';
+const msg=t=>{$('#msg').textContent=t};
+$('#f').onsubmit=async e=>{e.preventDefault();msg('');const v=$('#em').value.trim();if(!v){msg('Please enter a valid email address.');return}
+try{const d=await dec(v);sessionStorage.setItem('d',JSON.stringify(d));show(d);return}catch(x){}
+if(/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(v)){try{if(ENDPOINT)await fetch(ENDPOINT,{method:'POST',mode:'no-cors',body:new URLSearchParams({email:v})})}catch(x){}
+$('#em').value='';msg("Thanks, you're on the list.")}else msg('Please enter a valid email address.')};
 const c=sessionStorage.getItem('d');if(c)show(JSON.parse(c));
 </script></body></html>
