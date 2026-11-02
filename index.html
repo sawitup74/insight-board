@@ -1,0 +1,53 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="robots" content="noindex,nofollow,noarchive">
+<meta name="referrer" content="no-referrer">
+<title>Insights</title>
+<style>
+body{font-family:system-ui,sans-serif;margin:0;background:#f6f7f9;color:#222}
+main{max-width:960px;margin:auto;padding:16px}
+.card{background:#fff;border:1px solid #ddd;border-radius:8px;padding:14px;margin:12px 0}
+table{border-collapse:collapse;width:100%;font-size:14px}td,th{padding:4px 6px;border-bottom:1px solid #eee;text-align:left}td.n,th.n{text-align:right}
+nav button,.tabs button{margin:2px;padding:6px 10px;border:1px solid #bbb;background:#fff;border-radius:6px;cursor:pointer}
+nav button.on,.tabs button.on{background:#333;color:#fff}
+#lock{max-width:320px;margin:80px auto;text-align:center}#lock input{padding:8px;width:70%}#lock button{padding:8px 14px}
+#err{color:#b00;min-height:1.2em}.muted{color:#888}.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:12px}
+svg{width:100%;height:auto}
+</style></head><body><main>
+<div id="lock"><h2>Insights</h2><form id="f"><input id="pw" type="password" autocomplete="current-password" autofocus> <button>Unlock</button></form><p id="err"></p></div>
+<div id="app" hidden><p id="asof" class="muted"></p>
+<nav><button data-v="ov" class="on">Overview</button><button data-v="ps">Per site</button><button data-v="rf">Referring sites</button><button data-v="tr">Trends</button></nav>
+<div id="view"></div></div>
+</main><script>
+const $=s=>document.querySelector(s),esc=s=>String(s).replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const b64=s=>Uint8Array.from(atob(s),c=>c.charCodeAt(0));
+async function dec(pw){const e=await (await fetch('data.enc.json',{cache:'no-store'})).json();
+const k=await crypto.subtle.importKey('raw',new TextEncoder().encode(pw),'PBKDF2',false,['deriveKey']);
+const key=await crypto.subtle.deriveKey({name:'PBKDF2',salt:b64(e.salt),iterations:e.iter,hash:'SHA-256'},k,{name:'AES-GCM',length:256},false,['decrypt']);
+return JSON.parse(new TextDecoder().decode(await crypto.subtle.decrypt({name:'AES-GCM',iv:b64(e.iv)},key,b64(e.ct))));}
+let D,V='ov',S='Site 1';
+function bars(vals,labels){const m=Math.max(1,...vals),w=600,h=160,bw=w/vals.length;
+return '<svg viewBox="0 0 '+w+' '+(h+20)+'">'+vals.map((v,i)=>{const bh=v/m*h;return '<rect x="'+(i*bw+1)+'" y="'+(h-bh)+'" width="'+(bw-2)+'" height="'+bh+'" fill="#4a78b5"><title>'+esc(labels[i])+': '+v+'</title></rect>'}).join('')+
+'<text x="0" y="'+(h+15)+'" font-size="11">'+esc(labels[0])+'</text><text x="'+w+'" y="'+(h+15)+'" font-size="11" text-anchor="end">'+esc(labels[labels.length-1])+'</text><text x="0" y="12" font-size="11">max '+m+'</text></svg>';}
+function tbl(rows,cols){if(!rows||!rows.length)return '<p class="muted">No data yet</p>';
+return '<table><tr>'+cols.map(c=>'<th'+(c[2]?' class="n"':'')+'>'+c[0]+'</th>').join('')+'</tr>'+rows.map(r=>'<tr>'+cols.map(c=>'<td'+(c[2]?' class="n"':'')+'>'+esc(typeof c[1]=='function'?c[1](r):r[c[1]])+'</td>').join('')+'</tr>').join('')+'</table>';}
+const card=(t,b)=>'<div class="card"><h3>'+t+'</h3>'+b+'</div>';
+const st=r=>r.status=='ok'?r.visits:'no data yet';
+function render(){let h='';document.querySelectorAll('nav button').forEach(b=>b.classList.toggle('on',b.dataset.v==V));
+if(V=='ov'){const g=D.global;h=card('Guide sites total',''+D.guide_total)+card('Ranking (Sites 1-6)',tbl(D.ranking,[['Site','site'],['Visits',st,1]]))+
+card('Separate',tbl([D.separate],[['Site','site'],['Visits',st,1]]))+card('Visits by day (all sites, 30 days)',bars(g.daily.map(d=>d.visits),g.daily.map(d=>d.day)));}
+if(V=='ps'){const s=D.sites[S];h='<div class="tabs">'+Object.keys(D.sites).map(k=>'<button class="'+(k==S?'on':'')+'" data-s="'+k+'">'+k+'</button>').join('')+'</div>';
+if(s.status!='ok')h+=card(S,'<p class="muted">'+esc(s.status)+'</p>');else{const c=[['Name','name'],['Visits','count',1]];
+h+=card(S+' total',''+s.total)+card('Visits by day',bars(s.daily.map(d=>d.visits),s.daily.map(d=>d.day)))+card('Visits by hour (Chicago time)',bars(s.hourly,s.hourly.map((_,i)=>i+':00')))+
+'<div class="grid">'+[['Referrers','referrers'],['Countries','countries'],['Browsers','browsers'],['Systems','systems'],['Devices','devices'],['Top pages','pages']].map(x=>card(x[0],tbl(s[x[1]],c))).join('')+'</div>';}}
+if(V=='rf'){const L=Object.keys(D.sites);h=card('Referring sites (all sites)',tbl(D.global.referrers,[['Name','name'],['Total','total',1]].concat(L.map(l=>[l,r=>r.by_site[l]||'',1]))))+
+'<div class="grid">'+[['Countries','countries'],['Browsers','browsers'],['Devices','devices']].map(x=>card(x[0],tbl(D.global[x[1]],[['Name','name'],['Total','total',1]]))).join('')+'</div>'+
+card('Visits by hour, all sites (Chicago time)',bars(D.global.hourly,D.global.hourly.map((_,i)=>i+':00')));}
+if(V=='tr')h=card('Trends','<ul>'+D.trends.map(t=>'<li>'+esc(t)+'</li>').join('')+'</ul>');
+$('#view').innerHTML=h;document.querySelectorAll('[data-s]').forEach(b=>b.onclick=()=>{S=b.dataset.s;render()});}
+function show(d){D=d;$('#lock').hidden=true;$('#app').hidden=false;
+$('#asof').textContent='Data as of '+new Date(d.generated).toLocaleString('en-US',{timeZone:'America/Chicago',dateStyle:'medium',timeStyle:'short'})+' (Chicago time)';render();}
+document.querySelectorAll('nav button').forEach(b=>b.onclick=()=>{V=b.dataset.v;render()});
+$('#f').onsubmit=async e=>{e.preventDefault();$('#err').textContent='';try{const d=await dec($('#pw').value);sessionStorage.setItem('d',JSON.stringify(d));show(d)}catch(x){$('#err').textContent='Wrong password'}};
+const c=sessionStorage.getItem('d');if(c)show(JSON.parse(c));
+</script></body></html>
