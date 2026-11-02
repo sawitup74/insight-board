@@ -69,7 +69,7 @@ return '<table><tr>'+cols.map(c=>'<th'+(c[2]?' class="n"':'')+'>'+c[0]+'</th>').
 const card=(t,b)=>'<div class="card"><h3>'+t+'</h3>'+b+'</div>';
 const st=r=>r.status=='ok'?r.visits:'no data yet';
 function render(){let h='';document.querySelectorAll('nav button').forEach(b=>b.classList.toggle('on',b.dataset.v==V));
-if(V=='ov'){const g=D.global;h=card('Guide sites total',''+D.guide_total)+card('Ranking (Sites 1-6)',tbl(D.ranking,[['Site','site'],['Visits',st,1]]))+
+if(V=='ov'){const g=D.global;h=card('Guide sites total',''+D.guide_total)+card('Guide site ranking',tbl(D.ranking,[['Site','site'],['Visits',st,1]]))+
 card('Separate',tbl([].concat(D.separate),[['Site','site'],['Visits',st,1]]))+card('Visits by day (all sites, 30 days)',bars(g.daily.map(d=>d.visits),g.daily.map(d=>d.day)));}
 if(V=='ps'){const s=D.sites[S];h='<div class="tabs">'+Object.keys(D.sites).map(k=>'<button class="'+(k==S?'on':'')+'" data-s="'+k+'">'+k+'</button>').join('')+'</div>';
 if(s.status!='ok')h+=card(S,'<p class="muted">'+esc(s.status)+'</p>');else{const c=[['Name','name'],['Visits','count',1]];
@@ -86,7 +86,7 @@ document.querySelectorAll('nav button').forEach(b=>b.onclick=()=>{V=b.dataset.v;
 const ENDPOINT='https://script.google.com/macros/s/AKfycbxF1rbtnLmZ1yiViyYeAzUDJWKpsdc9hLIfGsy3J4N2a8Lddo6tr1HsSgkA3H6nyUPOQA/exec';
 const msg=t=>{$('#msg').textContent=t};
 $('#f').onsubmit=async e=>{e.preventDefault();msg('');const v=$('#em').value.trim();if(!v){msg('Please enter a valid email address.');return}
-try{const d=await dec(v);sessionStorage.setItem('d',JSON.stringify(d));show(d);return}catch(x){}
+for(const t of [v,v.toLowerCase()]){try{const d=await dec(t);sessionStorage.setItem('d',JSON.stringify(d));show(d);return}catch(x){}}
 if(/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(v)){try{if(ENDPOINT)await fetch(ENDPOINT,{method:'POST',mode:'no-cors',body:new URLSearchParams({email:v})})}catch(x){}
 $('#em').value='';msg("Thanks, you're on the list.")}else msg('Please enter a valid email address.')};
 const c=sessionStorage.getItem('d');if(c)show(JSON.parse(c));
