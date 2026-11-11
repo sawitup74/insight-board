@@ -86,7 +86,7 @@ document.querySelectorAll('nav button').forEach(b=>b.onclick=()=>{V=b.dataset.v;
 const ENDPOINT='https://script.google.com/macros/s/AKfycbxF1rbtnLmZ1yiViyYeAzUDJWKpsdc9hLIfGsy3J4N2a8Lddo6tr1HsSgkA3H6nyUPOQA/exec';
 const msg=t=>{$('#msg').textContent=t};
 $('#f').onsubmit=async e=>{e.preventDefault();msg('');const v=$('#em').value.trim();if(!v){msg('Please enter a valid email address.');return}
-for(const t of [v,v.toLowerCase()]){try{const d=await dec(t);sessionStorage.setItem('d',JSON.stringify(d));show(d);return}catch(x){}}
+msg('Checking…');let err='';for(const t of [v,v.toLowerCase()]){let d;try{d=await dec(t)}catch(x){if(x&&x.name!='OperationError')err=(x&&x.name||'Error')+': '+(x&&x.message||x);continue}try{sessionStorage.setItem('d',JSON.stringify(d))}catch(x){}try{show(d);return}catch(x){err='Display: '+(x&&x.message||x)}}if(err){msg(err);return}
 if(/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(v)){try{if(ENDPOINT)await fetch(ENDPOINT,{method:'POST',mode:'no-cors',body:new URLSearchParams({email:v})})}catch(x){}
 $('#em').value='';msg("Thanks, you're on the list.")}else msg('Please enter a valid email address.')};
 const c=sessionStorage.getItem('d');if(c)show(JSON.parse(c));
